@@ -41,7 +41,7 @@ class Selector {
   }
 
   runSelector6() {
-    let $oddRows = $('tr:odd');
+    let $oddRows = $('tr:even');
     console.log(`6. There are ${$oddRows.length} odd table rows on this page`);
   }
 }
