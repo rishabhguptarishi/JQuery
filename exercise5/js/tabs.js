@@ -2,11 +2,12 @@ class TabbedNavigation {
 
   //TabbedNavigation constructor
   constructor(data) {
-    this.$module = data.$module.hide();
+    this.$module = data.$module;
     this.$unorderedList = $('<ul />');
   }
 
   init(){
+    this.$module.hide();
     this.createTabbedNavigation();
   }
 
