@@ -13,7 +13,7 @@ class DivStack {
     this.addEventListener();
   }
 
-  addEventListener() {
+  addBinding() {
     this.$emptyContainer.bind('click', (eventObjet) => {
       this.checkTargetTagType($(eventObjet.target));
     });

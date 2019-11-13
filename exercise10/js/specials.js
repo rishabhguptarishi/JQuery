@@ -1,11 +1,10 @@
 class Special {
 
-  constructor($specials) {
-    this.$specials = $specials;
+  constructor(data) {
+    this.$specials = data.$specials;
     this.$targetDiv = $('<div />');
     this.selectItems = this.$specials.find('select');
     this.$cachedReturnedObject = null;
-    this.init();
   }
 
   init() {
@@ -22,7 +21,7 @@ class Special {
   }
 
   checkIfJSONObjectIsCached(value) {
-    this.$cachedReturnedObject ? this.generateHTMLForSpecial(this.$cachedReturnedObject, value) : this.loadAjax(value);
+    this.$cachedReturnedObject ? this.generateHTMLForSpecial(value) : this.loadAjax(value);
   }
 
   loadAjax(value) {
@@ -32,14 +31,17 @@ class Special {
       url: 'data/specials.json',
       success: (returnedObject) => {
         this.$cachedReturnedObject = returnedObject;
-        this.generateHTMLForSpecial(returnedObject, value);
+        this.generateHTMLForSpecial(value);
+      },
+      error: () => {
+        alert('could not load data please try again');
       }
     });
   }
 
-  generateHTMLForSpecial(returnedObject, value) {
-    if (returnedObject[value]) {
-      let returnedObjectData = returnedObject[value];
+  generateHTMLForSpecial(value) {
+    if (this.$cachedReturnedObject[value]) {
+      let returnedObjectData = this.$cachedReturnedObject[value];
       this.$targetDiv.html('');
       this.$targetDiv.append($('<h3 />', {
         'style': `color:${returnedObjectData.color}`,
@@ -57,5 +59,8 @@ class Special {
 }
 
 $(() => {
-  new Special($('#specials form'));
+  let data = {
+    $specials : $('#specials form'),
+  }
+  new Special(data).init();
 });
