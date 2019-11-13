@@ -4,7 +4,6 @@ class TabbedNavigation {
   constructor(data) {
     this.$module = data.$module.hide();
     this.$unorderedList = $('<ul />');
-    this.init();
   }
 
   init(){
@@ -20,15 +19,18 @@ class TabbedNavigation {
   //Manipulating the newly created ul
   manipulateUnorderedList() {
     let unorderedList = this.$unorderedList;
-    this.$module.each(function() {
-      let $innerModule = $(this);
-      let $listItem = $('<li>' + $(this).find('h2').text() + '</li>');
+    this.$module.each((index, module) => {
+      let $listItem = $('<li>' + $(module).find('h2').text() + '</li>');
       $listItem.appendTo(unorderedList);
-      $listItem.bind('click', function() {
-        $listItem.addClass('current').siblings().removeClass('current');
-        $innerModule.show().siblings('.module').hide();
-      })
+      this.bindClickToItems($listItem, $(module));
     });
+  }
+
+  bindClickToItems($listItem, $module){
+    $listItem.bind('click', () => {
+      $listItem.addClass('current').siblings().removeClass('current');
+      $module.show().siblings('.module').hide();
+    })
   }
 
   //Preparing to show the first tab
@@ -42,5 +44,6 @@ $(() => {
   let data = {
     $module : $('div .module'),
   };
-  new TabbedNavigation(data);
+  let tabbedNavigator = new TabbedNavigation(data);
+  tabbedNavigator.init();
 });
