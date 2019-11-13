@@ -1,13 +1,17 @@
 class TabbedNavigation {
 
   //TabbedNavigation constructor
-  constructor($module, $unorderedList) {
-    this.$module = $module.hide();
-    this.$unorderedList = $unorderedList;
-    this._doTabbedNavigation();
+  constructor(data) {
+    this.$module = data.$module.hide();
+    this.$unorderedList = $('<ul />');
+    this.init();
   }
 
-  _doTabbedNavigation() {
+  init(){
+    this.createTabbedNavigation();
+  }
+
+  createTabbedNavigation() {
     this.$unorderedList.insertBefore(this.$module.first());
     this.manipulateUnorderedList();
     this.prepareToShowFirstTabAndRelatedModule();
@@ -35,5 +39,8 @@ class TabbedNavigation {
 }
 
 $(() => {
-  new TabbedNavigation($('div.module'), $('<ul />'));
+  let data = {
+    $module : $('div .module'),
+  };
+  new TabbedNavigation(data);
 });
