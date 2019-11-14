@@ -22,8 +22,7 @@ class Loader {
     element.bind('click', (eventObject) => {
       eventObject.preventDefault();
       let id = `#${element.find('a').attr('href').split('#')[1]}`;
-      element.data('targetDiv').load(`data/blog.html ${id}`);
-      element.siblings().data('targetDiv').empty();
+      element.data('targetDiv').load(`data/blog.html ${id}`);      
     });
   }
 }
