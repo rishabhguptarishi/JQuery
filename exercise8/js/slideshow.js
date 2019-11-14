@@ -16,16 +16,17 @@ class Slideshow {
   }
 
   beginSlideshow() {
-    this.$slideItems.first().nextAll().addClass('hidden');
+    let $items = this.$slideItems.slice(0,1);
+    $items.siblings().addClass('hidden');
     this.$navigation.html(`${this.nextItem + 1} of ${this.slideShowSize}... Image: ${this.showImageViewed()}`);
-    this.$slideItems.first().delay(3500).fadeOut(500, () => {
+    $items.delay(3500).fadeOut(500, () => {
         this.showNextSlideItem();
       });
   }
 
   showNextSlideItem() {
     this.nextItem += 1;
-    this.nextItem = this.resetNextItemIfOverflow();
+    this.resetNextItemIfOverflow();
     this.$navigation.html(`${this.nextItem + 1} of ${this.slideShowSize} --> Image: ${this.showImageViewed()}`);
     this.revealSlideItem();
   }
@@ -40,7 +41,6 @@ class Slideshow {
     if (this.nextItem === this.slideShowSize) {
       this.nextItem = 0;
     }
-    return this.nextItem;
   }
 
   showImageViewed() {
