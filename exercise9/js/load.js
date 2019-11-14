@@ -1,28 +1,36 @@
 class Loader {
 
-  constructor($headLines) {
-    this.$headLines = $headLines;
+  constructor(data) {
+    this.$headLines = data.$headLines;
+  }
+
+  init() {
     this.createTargetDivs();
   }
 
   createTargetDivs() {
     this.$headLines.each((index, element) => {
       let $targetDiv = $('<div />', { 'id': `targetDiv${index}`});
+      let $headlineElement = $(element);
       $targetDiv.insertAfter(element);
-      $(element).data('targetDiv', $targetDiv);
-      this.addEventListenerToHeadLine(element);
+      $headlineElement.data('targetDiv', $targetDiv);
+      this.addEventListenerToHeadLine($headlineElement);
     });
   }
 
   addEventListenerToHeadLine(element) {
-    $(element).bind('click', (eventObject) => {
+    element.bind('click', (eventObject) => {
       eventObject.preventDefault();
-      let id = `#${$(element).find('a').attr('href').split('#')[1]}`;
-      $(element).data('targetDiv').load(`data/blog.html ${id}`);
+      let id = `#${element.find('a').attr('href').split('#')[1]}`;
+      element.data('targetDiv').load(`data/blog.html ${id}`);
+      element.siblings().data('targetDiv').empty();
     });
   }
 }
 
 $(() => {
-  new Loader($('#blog h3'));
+  let data = {
+    $headLines : $('#blog h3'),
+  };
+  new Loader(data).init();
 });
