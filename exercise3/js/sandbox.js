@@ -38,7 +38,7 @@ class Manipulator{
 
   addAnotherModuleDiv(){
     let $newModuleDiv = $('<div />', {'class': 'module'});
-    $newModuleDiv.append($('img').first().clone(true).get(0));
+    $newModuleDiv.append($('img').first().clone(true));
     $newModuleDiv.insertAfter(this._$lastModule);
   }
 }
