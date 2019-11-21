@@ -1,4 +1,4 @@
-class PrioritySort{
+class SortingManager{
 
   constructor(data){
     this.lists = data.lists;
@@ -10,13 +10,13 @@ class PrioritySort{
 
   createPriorityLists(){
     this.lists.each(function(index, item){
-      let list = new PriorityList($(item));
+      let list = new ListSortingManager($(item));
       list.init();
     });
   }
 }
 
-class PriorityList{
+class ListSortingManager {
 
   constructor(list){
     this.list = list;
@@ -31,7 +31,7 @@ class PriorityList{
   init(){
     this.setPriorityOfItems();
     this.createButton();
-    this.header = $("<h3></h3>").css("display", "inline-block");
+    this.header = $("<h3>").addClass("header");
     this.createButtonsInHeader();
     this.bindClickEvent();
   }
@@ -50,35 +50,49 @@ class PriorityList{
   }
 
   createButtonsInHeader(){
+    let _this = this;
     let alphabetButton = $("<input>").attr("type", "button").val("Alphabetic Sort").addClass("button").data("type", "alphabetic");
+    alphabetButton.bind('click',function(){
+      _this.assignPrioritySort($(this));
+    });
+
     let priorityButton = $("<input>").attr("type", "button").val("Priority Sort").addClass("button").data("type", "priority");
+    priorityButton.bind('click',function(){
+      _this.assignPrioritySort($(this));
+    });
+
     let ascending = $("<input>").attr("type", "button").val("Ascending").addClass("button").data("type", "ascending");
+    ascending.bind('click',function(){
+      _this.assignOrderSort($(this));
+    });
+
     let descending = $("<input>").attr("type", "button").val("Descending").addClass("button").data("type", "descending");
+    descending.bind('click',function(){
+      _this.assignOrderSort($(this));
+    });
+
     this.header.append(alphabetButton, priorityButton, ascending, descending);
     this.list.before(this.header);
-    this.bindClickToHeaderButtons();
-    priorityButton.trigger("click");
-    ascending.trigger("click");
+    this.setInitialActiveButtons(priorityButton, ascending);
   }
 
-  bindClickToHeaderButtons(){
-    let _this = this;
-    let sortBy;
-    let sortingOrder;
-    this.header.find("input[type='button']").bind("click", function(){
-    var type = $(this).data("type");
-    if(type == "alphabetic" || type == "priority"){
-      sortBy = type;
-      _this.sortByClicked = $(this);
-      _this.highlightSortButton($(this));
-    }
-    if(type == "ascending" || type == "descending"){
-      sortingOrder = type;
-      _this.sortOrderClicked = $(this);
-      _this.highlightOrderButton($(this));
-    }
-    _this.sortingLists(sortBy, sortingOrder);
-    });
+  setInitialActiveButtons(priorityButton, ascending){
+    this.sortByClicked = priorityButton;
+    this.sortOrderClicked = ascending;
+    this.assignPrioritySort(priorityButton);
+    this.assignOrderSort(ascending);
+  }
+
+  assignPrioritySort(button){
+    this.sortByClicked = button;
+    this.highlightSortButton(button);
+    this.sortingLists(button.data("type"), this.sortOrderClicked.data("type"));
+  }
+
+  assignOrderSort(button){
+    this.sortOrderClicked = button;
+    this.highlightOrderButton(button);
+    this.sortingLists(this.sortByClicked.data("type"), button.data("type"));
   }
 
   highlightSortButton(button){
@@ -189,6 +203,6 @@ $(() => {
   data = {
     lists: $("ul.priority-sort"),
   };
-  let prioritySort = new PrioritySort(data);
+  let prioritySort = new SortingManager(data);
   prioritySort.init();
 });

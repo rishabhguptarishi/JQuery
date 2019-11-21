@@ -4,3 +4,6 @@
 .button{
   float: left;
 }
+.header{
+  display:inline-block;
+}
