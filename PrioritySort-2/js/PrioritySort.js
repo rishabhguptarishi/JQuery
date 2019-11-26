@@ -23,13 +23,11 @@ class ListSortingManager {
     this.initialCount = this.list.data("initial-items-count");
     this.listItems = this.list.find("li");
     this.seeAll = false;
-    this.hiddenList = [];
     this.prioritySorting = true;
     this.ascendingOrder = true;
   }
 
   init(){
-    this.setPriorityOfItems();
     this.createButton();
     this.header = $("<h3>").addClass("header");
     this.createButtonsInHeader();
@@ -97,20 +95,20 @@ class ListSortingManager {
 
   highlightSortButton(button){
     if(this.prioritySorting){
-      button.addClass("highlight-button").prev().removeClass("highlight-button");
+      button.addClass("highlight-button").siblings('[value="Alphabetic Sort"]').removeClass("highlight-button");
       this.prioritySorting = false;
     } else {
-      button.addClass("highlight-button").next().removeClass("highlight-button");
+      button.addClass("highlight-button").siblings('[value="Priority Sort"]').removeClass("highlight-button");
       this.prioritySorting = true;
     }
   }
 
   highlightOrderButton(button){
     if(this.ascendingOrder){
-      button.addClass("highlight-button").next().removeClass("highlight-button");
+      button.addClass("highlight-button").siblings('[value="Descending"]').removeClass("highlight-button");
       this.ascendingOrder = false;
     } else {
-      button.addClass("highlight-button").prev().removeClass("highlight-button");
+      button.addClass("highlight-button").siblings('[value="Ascending"]').removeClass("highlight-button");
       this.ascendingOrder = true;
     }
   }
@@ -135,15 +133,14 @@ class ListSortingManager {
     let _this = this;
     let sortedList;
     if(this.seeAll){
+      this.setPriorityOfItems();
       itemsToShow = this.listItems.length;
       items = this.listItems;
     } else{
       itemsToShow = this.initialCount;
       this.listItems.each(function(index, item){
-        if($(item).data("priority-order") > 0){
+        if($(item).data("priority-order")){
           items.push(item);
-        } else {
-          _this.hiddenList.push(item);
         }
       });
     }
@@ -186,16 +183,9 @@ class ListSortingManager {
 
   sortedDisplay(sortedList, itemsToShow){
     let _this = this;
-    $(sortedList).show();
+    this.list.empty();
     let visibleList = sortedList.slice(0, itemsToShow);
-    this.hiddenList.push(sortedList.slice(itemsToShow, sortedList.length));
-    this.hiddenList.forEach(function(item, index){
-      $(item).hide();
-    })
-    visibleList.forEach(function(item, index){
-      _this.list.append($(item));
-    })
-    this.hiddenList = [];
+    this.list.append(visibleList);
   }
 }
 
